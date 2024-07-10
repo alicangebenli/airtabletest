@@ -1,3 +1,1 @@
-type ApiResponse<Result> = {
-    "Data": Result,
-}
+type ApiResponse<Result> = Result

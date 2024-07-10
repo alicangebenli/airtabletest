@@ -14,7 +14,7 @@ export const AppoinmentService: AppoinmentServiceInterface = {
         })
 
         if (response.status === 200) {
-            return response.data
+            return response.data?.records.map(normalizer.getApointmentNormalizer)
         }
 
         return false
@@ -50,4 +50,27 @@ export const AppoinmentService: AppoinmentServiceInterface = {
 
         return false;
     },
+}
+
+
+const normalizer = {
+    getApointmentNormalizer(item: any) {
+        return {
+            key: item?.fields?.appointment_id || "",
+            appointment_id: item?.fields?.appointment_id || "",
+            appointment_date: item?.fields?.appointment_date || "",
+            appointment_address: item?.fields?.appointment_address || "",
+            contact_email: item?.fields?.contact_email?.[0] || "",
+            contact_name: item?.fields?.contact_name?.[0] || "",
+            contact_surname: item?.fields?.contact_surname?.[0] || "",
+            contact_phone: item?.fields?.contact_phone?.[0] || "",
+            is_cancelled: item?.fields?.is_cancelled || false,
+            agents: item?.fields?.agent_id?.map((id: string, index: number) => {
+                return {
+                    id,
+                    name: item.fields.agent_name[index]
+                }
+            }) || []
+        }
+    }
 }
