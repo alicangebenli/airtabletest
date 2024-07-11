@@ -7,4 +7,8 @@ export default class Agent {
         public number?: number,
     ) {
     }
+
+    public get fullName() {
+        return this.name + ' ' + this.surname
+    }
 }

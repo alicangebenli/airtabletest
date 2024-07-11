@@ -17,7 +17,7 @@ export const AgentService: AgentServiceInterface = {
 }
 
 const normalizer = {
-    getAgentsNormalizer(item: any) {
+    getAgentsNormalizer(item: any, id: number) {
         const agent = new Agent(
             item?.id,
             item?.fields?.agent_name,
@@ -25,6 +25,6 @@ const normalizer = {
             item?.fields?.color,
             item?.fields?.number,
         )
-        return {agent, appointments: item?.fields?.appointments}
+        return {id, agent, appointments: item?.fields?.appointments}
     }
 }

@@ -17,8 +17,8 @@ export const ContactService: ContactServiceInterface = {
 }
 
 const normalizer = {
-    getContactsNormalizer(item: any) {
-        const contanct = new Contact(
+    getContactsNormalizer(item: any, id: number) {
+        const contact = new Contact(
             item?.fields?.contact_id || "",
             item?.fields?.contact_name || "",
             item?.fields?.contact_surname || "",
@@ -26,6 +26,10 @@ const normalizer = {
             item?.fields?.contact_phone || ""
         )
 
-        return {contanct, appointments: item?.fields?.appointments || []}
+        return {
+            id,
+            contact,
+            appointments: item?.fields?.appointments || []
+        }
     }
 }

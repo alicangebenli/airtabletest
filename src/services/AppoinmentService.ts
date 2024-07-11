@@ -57,7 +57,7 @@ export const AppoinmentService: AppoinmentServiceInterface = {
 
 
 const normalizer = {
-    getApointmentNormalizer(item: any) {
+    getApointmentNormalizer(item: any, id: number) {
         const appointment = new Appointment(
             item?.fields?.appointment_id || "",
             item?.fields?.appointment_date || "",
@@ -73,7 +73,10 @@ const normalizer = {
         )
 
         return {
-            appointment, contact, agents: item?.fields?.agent_id?.map((id: string, index: number) => {
+            id,
+            appointment,
+            contact,
+            agents: item?.fields?.agent_id?.map((id: string, index: number) => {
                 return new Agent(
                     id,
                     item.fields.agent_name[index],

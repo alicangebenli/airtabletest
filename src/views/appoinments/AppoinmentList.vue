@@ -54,7 +54,7 @@ const showedAppointment = ref();
       </div>
     </template>
     <template v-slot:date="item">
-      <TimeDuration :date="item.appointment.date" :is-cancelled="item['is-callelled']"/>
+      <TimeDuration :date="item.appointment.date" :is-cancelled="item.appointment.isCancelled"/>
     </template>
     <template v-slot:agents="item">
       <div class="flex justify-center my-auto">
@@ -66,9 +66,13 @@ const showedAppointment = ref();
     </template>
   </List>
   <Pagination class-name="mt-2 ml-auto" :total-page="totalPage" @onChange="currentPage = $event"/>
-  <Modal title="Create Appointment" v-if="modalVisible" @close="modalVisible = false">
+  <Modal title="Create Appointment" v-if="modalVisible" @close="modalVisible = false; showedAppointment= null">
     <template v-slot:body>
-      <FormUpsertAppointment :agents="agents" :contacts="contacts" />
+      <FormUpsertAppointment
+          :agents="agents"
+          :contacts="contacts"
+          :appointment="showedAppointment"
+      />
     </template>
   </Modal>
 </template>

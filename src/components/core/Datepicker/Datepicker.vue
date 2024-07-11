@@ -10,13 +10,21 @@ export default defineComponent({
   props: {
     label: {
       type: String
+    },
+    defaultValue: {
+      type: Date
     }
   },
   data() {
     return {
-      date: ""
+      date: this.defaultValue || null
     }
   },
+  watch: {
+    date() {
+      console.log(this.date);
+    }
+  }
 })
 </script>
 

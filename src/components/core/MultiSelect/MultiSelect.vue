@@ -27,24 +27,38 @@ export default {
     trackBy: {
       type: String,
       required: true
-    }
+    },
+    multiple: {
+      type: Boolean,
+      default: false
+    },
+    defaultValue: {}
   },
   data() {
     return {
-      value: null,
+      value: this.defaultValue || null,
     }
   },
+  watch:{
+    value(){
+      console.log(this.value);
+    }
+  }
 }
 </script>
 <template>
   <div>
-    <label class="typo__label">{{ label }}</label>
+    <label class="block text-gray-700 text-sm font-bold mb-2">
+      {{ label }}
+    </label>
     <multiselect v-model="value"
                  :options="options"
                  :placeholder="placeholder"
                  :custom-label="customLabel"
                  :label="selectLabel"
-                 :track-by="trackBy">
+                 :track-by="trackBy"
+                 :multiple="multiple"
+    >
       <template v-slot:singleLabel="props" v-if="$slots['singleLabel']">
         <template v-if="value">
           <slot name="singleLabel" v-bind="props"/>
