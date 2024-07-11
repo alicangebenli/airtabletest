@@ -73,7 +73,7 @@ const showedAppointment = ref();
     </template>
     <template v-slot:adress="item">
       <div class="flex flex-col gap-y-2">
-        <div>{{ item.appointment.address }}</div>
+        <div class="text-ellipsis max-w-[200px] overflow-hidden">{{ item.appointment.address }}</div>
       </div>
     </template>
     <template v-slot:date="item">
