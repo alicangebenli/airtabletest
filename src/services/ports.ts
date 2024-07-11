@@ -1,3 +1,5 @@
+/* Appointment */
+    // Requests
 export type GetAppoinmentsRequest = {
     maxRecords?: number,
     view?: string,
@@ -10,7 +12,7 @@ export type CreateAppoinmentRequest = {
 }
 export type UpdateAppoinmentByIdRequest = {}
 export type DeleteAppoinmentsByIdsRequest = {}
-
+    // Responses
 export type GetAppoinmentsResponse = {
     appointment_id: string,
     appointment_date: string,
@@ -31,3 +33,39 @@ export interface AppoinmentServiceInterface {
 
     upsertAppoinmentById(body: UpdateAppoinmentByIdRequest, id: string): Promise<false | ApiResponse<any>>
 }
+/* Agent */
+export type GetAgentsResponse = {
+    id: string,
+    createdTime: string,
+    number: number,
+    agent_name: string,
+    agent_surname: string,
+    appointments: string[],
+    color: string
+}[];
+export type GetAgentsRequest = {
+    maxRecords?: number,
+}
+
+export interface AgentServiceInterface {
+    getAgents(params: GetAgentsRequest): Promise<false | ApiResponse<GetAgentsResponse>>
+}
+/* Contact */
+export type GetContactsResponse = {
+    key: number,
+    contact_id: number,
+    contact_name: string,
+    contact_surname: string,
+    contact_email: string,
+    contact_phone: string,
+    appointments: string[]
+}[];
+export type GetContactsRequest = {
+    maxRecords?: number,
+}
+
+export interface ContactServiceInterface {
+    getContacts(params: GetContactsRequest): Promise<false | ApiResponse<GetContactsResponse>>
+}
+
+

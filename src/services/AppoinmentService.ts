@@ -6,6 +6,9 @@ import {
     UpdateAppoinmentByIdRequest
 } from "@/services/ports.ts";
 import http from "@/shared/helpers/http.ts";
+import Appointment from "@/domain/Appointment.ts";
+import Contact from "@/domain/Contact.ts";
+import Agent from "@/domain/Agent.ts";
 
 export const AppoinmentService: AppoinmentServiceInterface = {
     async getAppointments(params: GetAppoinmentsRequest): Promise<false | ApiResponse<any>> {
@@ -55,21 +58,27 @@ export const AppoinmentService: AppoinmentServiceInterface = {
 
 const normalizer = {
     getApointmentNormalizer(item: any) {
+        const appointment = new Appointment(
+            item?.fields?.appointment_id || "",
+            item?.fields?.appointment_date || "",
+            item?.fields?.appointment_address || "",
+            item?.fields?.is_cancelled,
+        )
+        const contact = new Contact(
+            item?.fields?.contact_id?.[0] || "",
+            item?.fields?.contact_name?.[0] || "",
+            item?.fields?.contact_surname?.[0] || "",
+            item?.fields?.contact_email?.[0] || "",
+            item?.fields?.contact_phone?.[0] || "",
+        )
+
         return {
-            key: item?.fields?.appointment_id || "",
-            appointment_id: item?.fields?.appointment_id || "",
-            appointment_date: item?.fields?.appointment_date || "",
-            appointment_address: item?.fields?.appointment_address || "",
-            contact_email: item?.fields?.contact_email?.[0] || "",
-            contact_name: item?.fields?.contact_name?.[0] || "",
-            contact_surname: item?.fields?.contact_surname?.[0] || "",
-            contact_phone: item?.fields?.contact_phone?.[0] || "",
-            is_cancelled: item?.fields?.is_cancelled || false,
-            agents: item?.fields?.agent_id?.map((id: string, index: number) => {
-                return {
+            appointment, contact, agents: item?.fields?.agent_id?.map((id: string, index: number) => {
+                return new Agent(
                     id,
-                    name: item.fields.agent_name[index]
-                }
+                    item.fields.agent_name[index],
+                    item.fields.agent_surname[index],
+                )
             }) || []
         }
     }

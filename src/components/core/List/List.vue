@@ -2,8 +2,10 @@
 import Row from "./Row.vue";
 import {defineComponent, PropType} from "vue";
 import {Header} from "./types.ts";
+
 export default defineComponent({
   components: {Row},
+  emits: ['onClickRow'],
   props: {
     headers: {
       type: Array as PropType<Header[]>,
@@ -33,14 +35,19 @@ export default defineComponent({
         },
       ]
     }
+  },
+  methods: {
+    onClickRow() {
+      this.$emit('onClickRow', ...arguments)
+    }
   }
 })
 </script>
 
 <template>
   <div>
-    <Row v-for="(item, index) in items" :item="item" :columns="headers" :index="index">
-      <template v-slot:[column.key]="scopedSlot" v-for="column in headers" >
+    <Row v-for="(item, index) in items" :item="item" :columns="headers" :index="index" @onClick="onClickRow">
+      <template v-slot:[column.key]="scopedSlot" v-for="column in headers">
         <slot :name="column.key" v-bind="scopedSlot" v-if="column.scopedSlot"/>
         <template v-else>
           {{ item[column.key] }}
@@ -49,7 +56,3 @@ export default defineComponent({
     </Row>
   </div>
 </template>
-
-<style scoped>
-
-</style>

@@ -1,7 +1,7 @@
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
-import Avatar from "../core/Avatar/Avatar.vue";
-import {Agents} from "@/components/AgentAvatars/types.ts";
+import Avatar from "../../core/Avatar/Avatar.vue";
+import {Agents} from "@/components/shared/AgentAvatars/types.ts";
 
 export default defineComponent({
   components: {Avatar},

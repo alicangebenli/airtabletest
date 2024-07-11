@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import useAppointment from "@/composable/useAppointment.ts";
-import List from "@/components/core/List/List.vue";
-import TimeDuration from "@/components/TimeDuration/TimeDuration.vue";
-import Pagination from "@/components/core/Pagination/Pagination.vue";
-import AgentAvatars from "@/components/AgentAvatars/AgentAvatars.vue";
 
-const {appointments} = useAppointment();
+import List from "@/components/core/List/List.vue";
+import TimeDuration from "@/components/shared/TimeDuration/TimeDuration.vue";
+import Pagination from "@/components/core/Pagination/Pagination.vue";
+import AgentAvatars from "@/components/shared/AgentAvatars/AgentAvatars.vue";
+import Button from "@/components/core/Button/Button.vue";
+import Modal from "@/components/core/Modal/Modal.vue";
+import useAppointment from "@/composable/useAppointment.ts";
+import {ref} from "vue";
+import FormUpsertAppointment from "@/components/forms/FormUpsertAppointment.vue";
+
+const {appointments, agents, totalPage, currentPage, contacts} = useAppointment();
 const headers = [
   {
     key: 'contact',
@@ -24,24 +29,32 @@ const headers = [
     scopedSlot: true
   }
 ]
+const modalVisible = ref(false);
+const showedAppointment = ref();
 </script>
 
 <template>
-  <List :headers="headers" :items="appointments">
+  <div>
+    <div></div>
+    <div class="flex">
+      <Button class-name="ml-auto bg-red-600 hover:bg-red-700" text="Create Appointment" @click="modalVisible = true"/>
+    </div>
+  </div>
+  <List :headers="headers" :items="appointments" @onClickRow="(e) => { showedAppointment = e; modalVisible=true}">
     <template v-slot:contact="item">
       <div class="flex flex-col gap-y-2">
-        <div>{{ item.contact_name }}</div>
-        <div>{{ item.contact_email }}</div>
-        <div>{{ item.contact_phone }}</div>
+        <div>{{ item.contact.fullName }}</div>
+        <div>{{ item.contact.email }}</div>
+        <div>{{ item.contact.phone }}</div>
       </div>
     </template>
     <template v-slot:adress="item">
       <div class="flex flex-col gap-y-2">
-        <div>{{ item.appointment_address }}</div>
+        <div>{{ item.appointment.address }}</div>
       </div>
     </template>
     <template v-slot:date="item">
-      <TimeDuration :date="item.appointment_date" :is-cancelled="item['is-callelled']"/>
+      <TimeDuration :date="item.appointment.date" :is-cancelled="item['is-callelled']"/>
     </template>
     <template v-slot:agents="item">
       <div class="flex justify-center my-auto">
@@ -52,9 +65,10 @@ const headers = [
       </div>
     </template>
   </List>
-  <Pagination />
+  <Pagination class-name="mt-2 ml-auto" :total-page="totalPage" @onChange="currentPage = $event"/>
+  <Modal title="Create Appointment" v-if="modalVisible" @close="modalVisible = false">
+    <template v-slot:body>
+      <FormUpsertAppointment :agents="agents" :contacts="contacts" />
+    </template>
+  </Modal>
 </template>
-
-<style scoped>
-
-</style>
