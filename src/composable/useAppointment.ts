@@ -41,7 +41,7 @@ export default function useAppointment() {
             contacts.value = contactResponse;
         }
     })
-    //actions
+    //computeds
     const showingAppointments = computed(() => {
         return appointments.value.slice((currentPage.value - 1) * 10, ((currentPage.value - 1) * 10) + 10)
     });
@@ -50,8 +50,12 @@ export default function useAppointment() {
         return Math.ceil(appointments.value.length / 10)
     })
 
+    const totalAppointments = computed(() => {
+        return appointments.value.length;
+    });
     return {
         appointments: showingAppointments,
+        totalAppointments,
         agents,
         contacts,
         currentPage,

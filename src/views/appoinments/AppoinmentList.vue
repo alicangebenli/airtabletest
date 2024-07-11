@@ -1,5 +1,8 @@
 <script setup lang="ts">
-
+import FormUpsertAppointment from "@/components/forms/FormUpsertAppointment.vue";
+import Datepicker from "@/components/core/Datepicker/Datepicker.vue";
+import Input from "@/components/core/Input/Input.vue";
+import Select from "@/components/core/Select/Select.vue";
 import List from "@/components/core/List/List.vue";
 import TimeDuration from "@/components/shared/TimeDuration/TimeDuration.vue";
 import Pagination from "@/components/core/Pagination/Pagination.vue";
@@ -8,9 +11,7 @@ import Button from "@/components/core/Button/Button.vue";
 import Modal from "@/components/core/Modal/Modal.vue";
 import useAppointment from "@/composable/useAppointment.ts";
 import {ref} from "vue";
-import FormUpsertAppointment from "@/components/forms/FormUpsertAppointment.vue";
-
-const {appointments, agents, totalPage, currentPage, contacts} = useAppointment();
+const {appointments, agents, totalPage, currentPage, contacts, totalAppointments} = useAppointment();
 const headers = [
   {
     key: 'contact',
@@ -34,9 +35,31 @@ const showedAppointment = ref();
 </script>
 
 <template>
-  <div>
-    <div></div>
+  <div class="flex items-center gap-2 mb-4">
+    <div class="w-[180px]">
+      <AgentAvatars :agents="agents.map(x=>x.agent)"/>
+    </div>
+    <div>
+      <Select :options="[
+          {text: 'All Statuses', value: 'allStatuses', selected: true},
+          {text: 'Completed', value: 'allStatuses', selected: false},
+          {text: 'Upcoming', value: 'allStatuses', selected: false},
+      ]"/>
+    </div>
+    <div>
+      <Datepicker/>
+    </div>
+    <div>
+      <Datepicker/>
+    </div>
+    <div class="ml-auto">
+      <Input placeholder="Search"/>
+    </div>
+  </div>
+  <hr class="my-12 h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
+  <div class="justify-center items-center">
     <div class="flex">
+      <div>{{ totalAppointments }} Appoiments found.</div>
       <Button class-name="ml-auto bg-red-600 hover:bg-red-700" text="Create Appointment" @click="modalVisible = true"/>
     </div>
   </div>

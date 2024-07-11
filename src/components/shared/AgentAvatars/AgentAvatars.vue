@@ -15,7 +15,7 @@ export default defineComponent({
           color: ""
         }
       ]
-    }
+    },
   },
   methods: {
     getStyle(index: number) {
@@ -30,7 +30,12 @@ export default defineComponent({
 
 <template>
   <div class="flex relative h-[40px]">
-    <Avatar v-for="(user, index) in agents" :custom-style="getStyle(index)" :text="(user?.name?.[0] || '') + (user?.surname?.[0] || '')"
-            :custom-class="'absolute'" :bg-color="user.color"/>
+    <Avatar v-for="(user, index) in agents.slice(0,4)"
+            :custom-style="getStyle(index)"
+            :text="(user?.name?.[0] || '') + (user?.surname?.[0] || '')"
+            :custom-class="'absolute text-white'"
+            :bg-color="user.color"
+    />
+    <Avatar text="+4" :custom-style="getStyle(4)" :custom-class="'absolute'" bg-color="#ddd" />
   </div>
 </template>

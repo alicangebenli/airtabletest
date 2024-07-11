@@ -29,10 +29,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>
-    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-      {{ label }}
-    </label>
-    <VueDatePicker v-model="date"></VueDatePicker>
-  </div>
+  <label class="block text-gray-700 text-sm font-bold mb-2" v-if="label">
+    {{ label }}
+  </label>
+  <VueDatePicker v-model="date"></VueDatePicker>
 </template>
