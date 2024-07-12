@@ -8,6 +8,7 @@ import http from "@/shared/helpers/http.ts";
 import Appointment from "@/domain/Appointment.ts";
 import Contact from "@/domain/Contact.ts";
 import Agent from "@/domain/Agent.ts";
+
 export const AppoinmentService: AppoinmentServiceInterface = {
     async getAppointments(params: GetAppoinmentsRequest): Promise<false | ApiResponse<any>> {
         const response = await http.get(`/Appointments`, {
@@ -41,7 +42,7 @@ export const AppoinmentService: AppoinmentServiceInterface = {
         }
 
         return false;
-    },
+    }
 }
 
 

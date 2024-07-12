@@ -11,7 +11,7 @@ import Agent from "@/domain/Agent.ts";
 import Contact from "@/domain/Contact.ts";
 import {computed} from "@vue/reactivity";
 import * as yup from "yup";
-import {useForm, useField, useIsFormValid, useFieldValue} from "vee-validate";
+import {useForm, useField} from "vee-validate";
 import {ref} from "vue";
 import {agents} from "@/stores/appointment";
 import useAppointment from "@/composable/useAppointment.ts";
@@ -41,10 +41,10 @@ const getDate = computed(() => {
 const getStatusOptions = computed(() => {
   return [
     {
-      value: isTimePassed ? '' : '',
-      text: isTimePassed ? 'Completed' : 'Upcoming', selected: !isCancelled
+      value: isTimePassed ? 'completed' : 'upcoming',
+      text: isTimePassed ? 'Completed' : 'Upcoming', selected: !isCancelled.value
     },
-    {value: '', text: 'Cancelled', selected: isCancelled}
+    {value: 'cancelled', text: 'Cancelled', selected: isCancelled.value}
   ]
 });
 const isFormUpdate = props.appointment?.appointment || false;
@@ -89,10 +89,10 @@ const onSubmit = handleSubmit(async () => {
   }
   emits('onSubmit')
 });
+
 </script>
 
 <template>
-  {{ date }}
   <form @submit.prevent="onSubmit">
     <MultiSelect
         :options="contacts"
@@ -132,9 +132,10 @@ const onSubmit = handleSubmit(async () => {
         @onChange="date = $event"
         :error="errors.date"
     />
-    <Select v-if="false"
+    <Select v-if="isFormUpdate"
             :options="getStatusOptions"
             @onSelect="status = $event"
+            class-name="mt-4"
     />
     <Button type="submit" text="Create" class-name="mt-4"/>
   </form>

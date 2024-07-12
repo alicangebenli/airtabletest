@@ -18,6 +18,10 @@ export default defineComponent({
       type: String as PropType<Label>,
       required: false,
       default: ""
+    },
+    className: {
+      type: String,
+      default: ""
     }
   },
   emits: ['onSelect'],
@@ -36,6 +40,7 @@ export default defineComponent({
     }}</label>
   <select
       @change="onSelect"
+      :class="className"
       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
     <option :key="option.value" :value="option.value" :selected="option.selected" v-for="option in options">
       {{ option.text }}

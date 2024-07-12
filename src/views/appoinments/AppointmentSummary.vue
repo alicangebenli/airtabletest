@@ -4,12 +4,10 @@ import Button from "@/components/core/Button/Button.vue";
 import FormUpsertAppointment from "@/components/forms/FormUpsertAppointment.vue";
 import Modal from "@/components/core/Modal/Modal.vue";
 import useAppointment from "@/composable/useAppointment.ts";
-import {ref} from "vue";
 import {modalVisible} from "@/stores/appointment.ts";
-import {agents, contacts} from "@/stores/appointment.ts";
+import {agents, contacts, showedAppointment} from "@/stores/appointment.ts";
 
-const {totalAppointments,} = useAppointment();
-const showedAppointment = ref();
+const {totalAppointments} = useAppointment();
 </script>
 
 <template>
