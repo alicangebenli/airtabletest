@@ -1,18 +1,7 @@
-<template>
-  <label class="block text-gray-700 text-sm font-bold mb-2" v-if="label">
-    {{ label }}
-  </label>
-  <input
-      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      :type="type"
-      :placeholder="placeholder"
-      @input="onChange"
-      :value="defaultValue"
-  >
-</template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {DefaultValue, Label, Placeholder, Type} from "@/components/core/Input/types.ts";
+
 export default defineComponent({
   props: {
     label: {
@@ -30,7 +19,8 @@ export default defineComponent({
     defaultValue: {
       type: String as PropType<DefaultValue>,
       required: false
-    }
+    },
+    error: {}
   },
   emits: ['onChange'],
   methods: {
@@ -40,3 +30,16 @@ export default defineComponent({
   }
 })
 </script>
+<template>
+  <label class="block text-gray-700 text-sm font-bold mb-2" v-if="label">
+    {{ label }}
+  </label>
+  <input
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      :type="type"
+      :placeholder="placeholder"
+      @input="onChange"
+      :value="defaultValue"
+  >
+  <span v-if="error" class="mt-2 mb-2 text-xs text-red-500 dark:text-gray-400">* {{ error }}</span>
+</template>

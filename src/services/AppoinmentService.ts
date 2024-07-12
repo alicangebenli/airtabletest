@@ -1,15 +1,13 @@
 import {
     AppoinmentServiceInterface,
     CreateAppoinmentRequest,
-    GetAppoinmentByIdRequest,
     GetAppoinmentsRequest,
-    UpdateAppoinmentByIdRequest
+    UpsertAppoinmentByIdRequest
 } from "@/services/ports.ts";
 import http from "@/shared/helpers/http.ts";
 import Appointment from "@/domain/Appointment.ts";
 import Contact from "@/domain/Contact.ts";
 import Agent from "@/domain/Agent.ts";
-
 export const AppoinmentService: AppoinmentServiceInterface = {
     async getAppointments(params: GetAppoinmentsRequest): Promise<false | ApiResponse<any>> {
         const response = await http.get(`/Appointments`, {
@@ -18,15 +16,6 @@ export const AppoinmentService: AppoinmentServiceInterface = {
 
         if (response.status === 200) {
             return response.data?.records.map(normalizer.getApointmentNormalizer)
-        }
-
-        return false
-    },
-    async getAppointmentById(id: GetAppoinmentByIdRequest): Promise<false | ApiResponse<any>> {
-        const response = await http.get(`/Appointments?${id}`)
-
-        if (response.status === 200) {
-            return response.data
         }
 
         return false
@@ -42,8 +31,8 @@ export const AppoinmentService: AppoinmentServiceInterface = {
 
         return false;
     },
-    async upsertAppoinmentById(body: UpdateAppoinmentByIdRequest, id: string): Promise<false | ApiResponse<any>> {
-        const response = await http.patch(`/Appointments?${id}`, {
+    async upsertAppoinmentById(body: UpsertAppoinmentByIdRequest, id: string): Promise<false | ApiResponse<any>> {
+        const response = await http.patch(`/Appointments/${id}`, {
             fields: body
         });
 

@@ -1,26 +1,59 @@
-import {onMounted, ref} from "vue";
-
 import {
     AgentServiceInterface,
-    AppoinmentServiceInterface, ContactServiceInterface,
-    GetAgentsResponse,
-    GetAppoinmentsResponse, GetContactsResponse
+    AppoinmentServiceInterface, ContactServiceInterface, CreateAppoinmentRequest, UpsertAppoinmentByIdRequest,
 } from "@/services/ports.ts";
 import {computed} from "@vue/reactivity";
 import {AgentService} from "@/services/AgentService.ts";
 import {ContactService} from "@/services/ContactService.ts";
 import {AppoinmentService} from "@/services/AppoinmentService.ts";
+import {agents, appointments, contacts, currentPage, filters} from "@/stores/appointment.ts";
+
 export default function useAppointment() {
-    //states
-    const appointments = ref([] as GetAppoinmentsResponse);
-    const agents = ref([] as GetAgentsResponse);
-    const contacts = ref([] as GetContactsResponse);
     const appointmentService: AppoinmentServiceInterface = AppoinmentService
     const agentService: AgentServiceInterface = AgentService
     const contactService: ContactServiceInterface = ContactService
-    const currentPage = ref(1);
-    //lifecycles
-    onMounted(async () => {
+
+    const showingAppointments = computed(() => {
+        let currentAppointments = appointments.value;
+        const {searchText, status, fromDate, endDate} = filters.value;
+        if (searchText) {
+            currentAppointments = currentAppointments.filter(item =>
+                item.contact?.fullName?.toLowerCase().includes(searchText.toLowerCase()) ||
+                item.contact?.phone.toString()?.includes(searchText) ||
+                item.contact.email?.toLowerCase().includes(searchText.toLowerCase())
+            )
+        }
+
+        if (status) {
+            if (status === 'completed') {
+                currentAppointments = currentAppointments.filter(x => x.appointment.isCompleted);
+            } else if (status === 'upcoming') {
+                currentAppointments = currentAppointments.filter(x => x.appointment.isUpcoming);
+            } else if (status === 'cancelled') {
+                currentAppointments = currentAppointments.filter(x => x.appointment.isCancelled);
+            }
+        }
+
+        if (fromDate && endDate) {
+            currentAppointments = currentAppointments.filter(x =>
+                x.appointment.getTime >= fromDate
+                && x.appointment.getTime <= endDate
+            );
+        }
+
+        return currentAppointments.slice((currentPage.value - 1) * 10, ((currentPage.value - 1) * 10) + 10)
+    });
+
+    const totalPage = computed(() => {
+        return Math.ceil(appointments.value.length / 10)
+    })
+
+    const totalAppointments = computed(() => {
+        return appointments.value.length;
+    });
+
+    // actions
+    const updateData = async () => {
         const [appointmentResponse, agentResponse, contactResponse] = await Promise.all(
             [
                 await appointmentService.getAppointments({maxRecords: 1000}),
@@ -40,25 +73,21 @@ export default function useAppointment() {
         if (contactResponse) {
             contacts.value = contactResponse;
         }
-    })
-    //computeds
-    const showingAppointments = computed(() => {
-        return appointments.value.slice((currentPage.value - 1) * 10, ((currentPage.value - 1) * 10) + 10)
-    });
+    }
 
-    const totalPage = computed(() => {
-        return Math.ceil(appointments.value.length / 10)
-    })
+    const create = async (data: CreateAppoinmentRequest) => {
+        return appointmentService.createAppoinment(data)
+    }
 
-    const totalAppointments = computed(() => {
-        return appointments.value.length;
-    });
+    const update = async (data: UpsertAppoinmentByIdRequest, id: string) => {
+        return appointmentService.upsertAppoinmentById(data, id)
+    }
     return {
         appointments: showingAppointments,
         totalAppointments,
-        agents,
-        contacts,
-        currentPage,
-        totalPage
+        totalPage,
+        updateData,
+        create,
+        update
     }
 }

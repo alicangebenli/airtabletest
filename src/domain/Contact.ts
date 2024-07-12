@@ -3,8 +3,8 @@ export default class Contact {
         public id: number,
         public name: string,
         public surname: string,
-        public email: string,
-        public phone: string
+        public email: Email,
+        public phone: number
     ) {
     }
 

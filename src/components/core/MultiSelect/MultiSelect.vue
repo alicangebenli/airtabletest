@@ -2,6 +2,7 @@
 import Multiselect from 'vue-multiselect'
 
 export default {
+  emits: ['onChange'],
   components: {
     Multiselect
   },
@@ -32,16 +33,21 @@ export default {
       type: Boolean,
       default: false
     },
-    defaultValue: {}
+    defaultValue: {},
+    error: {}
   },
   data() {
     return {
       value: this.defaultValue || null,
     }
   },
-  watch:{
-    value(){
-      console.log(this.value);
+  watch: {
+    value: {
+      handler() {
+        if (this.value) {
+          this.$emit('onChange', this.value)
+        }
+      }
     }
   }
 }
@@ -69,6 +75,7 @@ export default {
         <slot name="option" v-bind="props"/>
       </template>
     </multiselect>
+    <span v-if="error" class="mt-2 mb-2 text-xs text-red-500 dark:text-gray-400">* {{ error }}</span>
   </div>
 </template>
 <style lang="scss">

@@ -1,5 +1,4 @@
 <script lang="ts">
-
 import Button from "@/components/core/Button/Button.vue";
 import {defineComponent} from "vue";
 

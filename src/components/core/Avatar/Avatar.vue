@@ -2,6 +2,7 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
+  emits:['onClick'],
   props: {
     text: {
       type: String,
@@ -17,14 +18,14 @@ export default defineComponent({
     },
     bgColor: {
       type: String,
-      default: ""
+      default: "#ddd"
     }
   }
 })
 </script>
 
 <template>
-  <div :style="customStyle" :class="customClass" class="cursor-pointer h-[40px] w-[40px] avatar flex border-2 border-gray-400 bg-gray-200 w-max items-center justify-center p-2">
+  <div @click="$emit('onClick')" :style="customStyle" :class="customClass" class="cursor-pointer h-[40px] w-[40px] avatar flex border-2 border-gray-400 bg-gray-200 items-center justify-center p-2">
     {{ text }}
   </div>
 </template>

@@ -2,8 +2,8 @@ import {calculateTimeDifferenceFromNowToNext} from "@/shared/utils/calculateTime
 
 export default class Appointment {
     constructor(
-        public id: number,
-        public date: string,
+        public id: string,
+        public date: DateTimeIsoString,
         public address: string,
         public isCancelled: boolean
     ) {
@@ -11,5 +11,17 @@ export default class Appointment {
 
     public get isTimePassed(): boolean {
         return !calculateTimeDifferenceFromNowToNext(this.date)
+    }
+
+    public get isCompleted() {
+        return this.isTimePassed && !this.isCancelled;
+    }
+
+    public get isUpcoming() {
+        return !this.isTimePassed && !this.isCancelled;
+    }
+
+    public get getTime(): number {
+        return new Date(this.date).getTime();
     }
 }
